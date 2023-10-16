@@ -4,11 +4,11 @@ game 'gta5'
 
 client_scripts {
     'src/c_main.lua',
-    'src/import.lua'
+    'import.lua'
 }
 
 server_scripts {
     '@vrp/lib/utils.lua',
     'src/s_main.lua',
-    'src/import.lua'
+    'import.lua'
 }
