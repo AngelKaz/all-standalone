@@ -1,4 +1,10 @@
-StandaloneFunctions = {}
+Standalone = {
+    RegisterServerCallback = function(self, name, func)
+        self[name] = func
+    end,
+
+    Functions = {}
+}
 
 local ESX, vRP, QBCore = nil
 local FrameworkSetup = false
@@ -27,14 +33,18 @@ function setupFramework(framework)
     FrameworkSetup = true
 end
 
-StandaloneFunctions.getUser = function(src)
+function getUserId(source)
+    return vRP.getUserId({source})
+end
+
+Standalone.Functions.getUser = function(src)
     if checkState() == false then return print("You need to setup framework first") end
 
     local promise = promise.new()
     local data = {}
 
     if vRP ~= nil then
-        local user_id = vRP.getUserId({src})
+        local user_id = getUserId(src)
 
         vRP.getUserIdentity({user_id, function(identity)
 
@@ -72,3 +82,66 @@ StandaloneFunctions.getUser = function(src)
     local result, err = Citizen.Await(promise)
     return result[1], result[2]
 end
+
+Standalone.Functions.checkJob = function(src, job)
+    if checkState() == false then return print("You need to setup framework first") end
+
+    local promise = promise.new()
+    local hasJob = false
+
+    if vRP ~= nil then
+        local user_id = getUserId(src)
+
+        if vRP.hasGroup({user_id, job}) then
+            hasJob = true
+        end
+
+        promise:resolve({hasJob, {}})
+    elseif ESX ~= nil then
+        local Player = ESX.GetPlayerFromId(src)
+
+        if Player.job.name == job then
+            hasJob = true
+        end
+
+        promise:resolve({hasJob, {}})
+    elseif QBCore ~= nil then
+        local Player = QBCore.Functions.GetPlayer(src)
+
+        if Player.PlayerData.job.name == job then
+            hasJob = true
+        end
+
+        promise:resolve({hasJob, {}})
+    end
+
+    local result, err = Citizen.Await(promise)
+    return result[1], result[2]
+end
+
+Standalone.Functions.notify = function(src, text, type)
+    if checkState() == false then return print("You need to setup framework first") end
+
+    if vRP ~= nil then
+
+    elseif ESX ~= nil then
+        local Player = ESX.GetPlayerFromId(src)
+        xPlayer.showNotification(text)
+    elseif QBCore ~= nil then
+        TriggerClientEvent('QBCore:Notify', src, text)
+    end
+end
+
+
+
+
+---------------------------------------------------------
+-------------------- Callbacks --------------------------
+---------------------------------------------------------
+-- Credits til Mohr for callbacks
+
+RegisterServerEvent("all-standalone:callback:TriggerServerCallback")
+AddEventHandler("all-standalone:callback:TriggerServerCallback", function(name, ...)
+    local source = source
+    TriggerClientEvent("all-standalone:callback:RecieveServerCallback", source, name, Standalone[name](...))
+end)

@@ -6,10 +6,10 @@ if isServer then
     end)
 
     exports("getStandalone", function()
-        return StandaloneFunctions
+        return Standalone.Functions
     end)
 else
     exports("getStandalone", function()
-        return StandaloneFunctions
+        return Standalone.Functions
     end)
 end
