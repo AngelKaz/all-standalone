@@ -8,7 +8,6 @@ client_scripts {
 }
 
 server_scripts {
-    '@vrp/lib/utils.lua',
     'src/s_main.lua',
     'import.lua'
 }

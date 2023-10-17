@@ -11,9 +11,13 @@ local function checkState()
     end
 end
 
+CreateThread(function()
+    setupFramework("qbcore")
+end)
+
 function setupFramework(framework)
     if string.lower(framework) == "vrp" then
-        vRP = module("vrp", "lib/Proxy").getInterface("vRP")
+        vRP = exports['vrp']:getfunc()
     elseif string.lower(framework) == "esx" then
         ESX = exports['es_extended']:getSharedObject()
     elseif string.lower(framework) == "qbcore" then
@@ -34,7 +38,7 @@ StandaloneFunctions.getUser = function(src)
 
         vRP.getUserIdentity({user_id, function(identity)
 
-            data.id = source
+            data.id = src
             data.user_id = user_id
             data.firstname = identity.firstname
             data.lastname = identity.name
@@ -42,28 +46,29 @@ StandaloneFunctions.getUser = function(src)
             data.phone = identity.phone
             data.registration = identity.registration
 
-            promise:resolve({data, nil})
+            promise:resolve({data, {}})
         end})
     elseif ESX ~= nil then
-        local xPlayer = ESX.GetPlayerFromId(source)
-        data.id = source
+        local xPlayer = ESX.GetPlayerFromId(src)
+        data.id = src
         data.firstname = xPlayer.PlayerData.firstname
         data.lastname = xPlayer.PlayerData.lastName
         data.age = xPlayer.PlayerData.dateofbirth
 
-        promise:resolve({data, nil})
+        promise:resolve({data, {}})
     elseif QBCore ~= nil then
-        local Player = QBCore.Functions.GetPlayer(source)
-        data.id = source
+        local Player = QBCore.Functions.GetPlayer(src)
+
+        data.id = src
         data.firstname = Player.PlayerData.charinfo.firstname
         data.lastname = Player.PlayerData.charinfo.lastname
         data.age = Player.PlayerData.charinfo.birthdate
         data.phone = Player.PlayerData.charinfo.phone
         data.registration = Player.PlayerData.citizenid
 
-        promise:resolve({data, nil})
+        promise:resolve({data, {}})
     end
 
-    local result = Citizen.Await(promise)
-    return result[1]
+    local result, err = Citizen.Await(promise)
+    return result[1], result[2]
 end

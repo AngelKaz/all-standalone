@@ -6,6 +6,4 @@ StandaloneFunctions.tpUser = function(c, person)
     if not person then
         person = PlayerPedId()
     end
-
-
 end
