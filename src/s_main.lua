@@ -24,7 +24,7 @@ function setupFramework(framework)
 end
 
 StandaloneFunctions.getUser = function(src)
-    if checkState() == false then return print("Setup Framework First") end
+    if checkState() == false then return print("You need to setup framework first") end
 
     local promise = promise.new()
     local data = {}
