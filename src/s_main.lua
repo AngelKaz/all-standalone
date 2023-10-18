@@ -1,8 +1,4 @@
 Standalone = {
-    RegisterServerCallback = function(self, name, func)
-        self[name] = func
-    end,
-
     Functions = {}
 }
 
@@ -139,6 +135,10 @@ end
 -------------------- Callbacks --------------------------
 ---------------------------------------------------------
 -- Credits til Mohr for callbacks
+
+Standalone.RegisterServerCallback = function(name, func)
+    Standalone[name] = func
+end
 
 RegisterServerEvent("all-standalone:callback:TriggerServerCallback")
 AddEventHandler("all-standalone:callback:TriggerServerCallback", function(name, ...)
