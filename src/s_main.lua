@@ -5,12 +5,18 @@ Standalone = {
 local ESX, vRP, QBCore = nil
 local FrameworkSetup = false
 
+local errorMsg = "You need to setup the framework!"
+
 local function checkState()
     if FrameworkSetup == false then
         return false
     else
         return true
     end
+end
+
+local function FrameworkStateErr()
+    print(errorMsg)
 end
 
 CreateThread(function()
@@ -34,7 +40,7 @@ function getUserId(source)
 end
 
 Standalone.Functions.getUser = function(src)
-    if checkState() == false then return print("You need to setup framework first") end
+    if checkState() == false then return FrameworkStateErr() end
 
     local promise = promise.new()
     local data = {}
@@ -80,7 +86,7 @@ Standalone.Functions.getUser = function(src)
 end
 
 Standalone.Functions.checkJob = function(src, job)
-    if checkState() == false then return print("You need to setup framework first") end
+    if checkState() == false then return FrameworkStateErr() end
 
     local promise = promise.new()
     local hasJob = false
@@ -116,7 +122,7 @@ Standalone.Functions.checkJob = function(src, job)
 end
 
 Standalone.Functions.notify = function(src, text, type)
-    if checkState() == false then return print("You need to setup framework first") end
+    if checkState() == false then return FrameworkStateErr() end
 
     if vRP ~= nil then
 
