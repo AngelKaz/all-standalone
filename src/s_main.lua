@@ -125,7 +125,7 @@ Standalone.Functions.notify = function(src, text, type)
     if checkState() == false then return FrameworkStateErr() end
 
     if vRP ~= nil then
-
+        vRP.notify(text)
     elseif ESX ~= nil then
         local Player = ESX.GetPlayerFromId(src)
         xPlayer.showNotification(text)
