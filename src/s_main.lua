@@ -125,7 +125,8 @@ Standalone.Functions.notify = function(src, text, type)
     if checkState() == false then return FrameworkStateErr() end
 
     if vRP ~= nil then
-        vRP.notify(text)
+        local user_id = getUserId(src)
+        vRP.notify(user_id, text)
     elseif ESX ~= nil then
         local Player = ESX.GetPlayerFromId(src)
         xPlayer.showNotification(text)
@@ -133,9 +134,6 @@ Standalone.Functions.notify = function(src, text, type)
         TriggerClientEvent('QBCore:Notify', src, text)
     end
 end
-
-
-
 
 ---------------------------------------------------------
 -------------------- Callbacks --------------------------
